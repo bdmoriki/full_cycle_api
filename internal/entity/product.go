@@ -36,7 +36,7 @@ func NewProduct(name string, price float64) (*Product, error) {
 		return product, err
 	}
 
-	return _, err
+	return nil, err
 }
 
 func (p *Product) Validate() error {
