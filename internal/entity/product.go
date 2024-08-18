@@ -8,11 +8,11 @@ import (
 )
 
 var (
-	errIDIsRequired    = errors.New("id is required")
-	errInvalidID       = errors.New("id is invalid")
-	errNameIsRequired  = errors.New("name is required")
-	errPriceIsRequired = errors.New("price is required")
-	errInvalidPrice    = errors.New("price is required")
+	ErrIDIsRequired    = errors.New("id is required")
+	ErrInvalidID       = errors.New("id is invalid")
+	ErrNameIsRequired  = errors.New("name is required")
+	ErrPriceIsRequired = errors.New("price is required")
+	ErrInvalidPrice    = errors.New("price is required")
 )
 
 type Product struct {
@@ -31,33 +31,32 @@ func NewProduct(name string, price float64) (*Product, error) {
 	}
 
 	err := product.Validate()
-
 	if err != nil {
-		return product, err
+		return nil, err
 	}
 
-	return nil, err
+	return product, nil
 }
 
 func (p *Product) Validate() error {
 	if p.ID.String() == "" {
-		return errIDIsRequired
+		return ErrIDIsRequired
 	}
 
 	if _, err := entity.ParseID(p.ID.String()); err != nil {
-		return errInvalidID
+		return ErrInvalidID
 	}
 
 	if p.Name == "" {
-		return errNameIsRequired
+		return ErrNameIsRequired
 	}
 
 	if p.Price == 0 {
-		return errPriceIsRequired
+		return ErrPriceIsRequired
 	}
 
 	if p.Price < 0 {
-		return errInvalidPrice
+		return ErrInvalidPrice
 	}
 
 	return nil
