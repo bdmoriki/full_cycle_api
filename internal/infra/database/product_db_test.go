@@ -7,17 +7,14 @@ import (
 
 	"github.com/bdmoriki/full_cycle_api/internal/entity"
 
-	"github.com/glebarez/sqlite"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm"
 )
 
 func TestCreateProduct(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := GetDBProduct()
 	if err != nil {
 		t.Error(err)
 	}
-	db.AutoMigrate(&entity.Product{})
 
 	product, _ := entity.NewProduct("Teclado Logitech", 500)
 
@@ -41,11 +38,10 @@ func TestCreateProduct(t *testing.T) {
 }
 
 func TestFindAll(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := GetDBProduct()
 	if err != nil {
 		t.Error(err)
 	}
-	db.AutoMigrate(&entity.Product{})
 
 	for i := 1; i < 24; i++ {
 		product, err := entity.NewProduct(fmt.Sprintf("Product %d", i), rand.Float64()*100)
@@ -77,11 +73,10 @@ func TestFindAll(t *testing.T) {
 }
 
 func TestFindById(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := GetDBProduct()
 	if err != nil {
 		t.Error(err)
 	}
-	db.AutoMigrate(&entity.Product{})
 
 	product, _ := entity.NewProduct("Controle Xbox", 300)
 
@@ -101,11 +96,10 @@ func TestFindById(t *testing.T) {
 }
 
 func TestUpdateProduct(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := GetDBProduct()
 	if err != nil {
 		t.Error(err)
 	}
-	db.AutoMigrate(&entity.Product{})
 
 	product, _ := entity.NewProduct("Xbox", 4000)
 
@@ -132,11 +126,10 @@ func TestUpdateProduct(t *testing.T) {
 }
 
 func TestDeleteProduct(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := GetDBProduct()
 	if err != nil {
 		t.Error(err)
 	}
-	db.AutoMigrate(&entity.Product{})
 
 	product, _ := entity.NewProduct("Nintendo Switch", 2000)
 

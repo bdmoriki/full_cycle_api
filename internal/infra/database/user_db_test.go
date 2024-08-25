@@ -4,17 +4,14 @@ import (
 	"testing"
 
 	"github.com/bdmoriki/full_cycle_api/internal/entity"
-	"github.com/glebarez/sqlite"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm"
 )
 
 func TestCreateUser(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := GetDBUser()
 	if err != nil {
 		t.Error(err)
 	}
-	db.AutoMigrate(&entity.User{})
 
 	user, _ := entity.NewUser("Bruno Moriki", "a@a.com", "123456")
 	userDB := NewUser(db)
@@ -31,11 +28,10 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestFindByEmail(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := GetDBUser()
 	if err != nil {
 		t.Error(err)
 	}
-	db.AutoMigrate(&entity.User{})
 
 	user, _ := entity.NewUser("Maria Silva", "maria@b.com", "123456789")
 	userDB := NewUser(db)
