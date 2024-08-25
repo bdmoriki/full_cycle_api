@@ -1,8 +1,9 @@
 package database
 
 import (
+	"fmt"
+	"math/rand"
 	"testing"
-	"time"
 
 	"github.com/bdmoriki/full_cycle_api/internal/entity"
 
@@ -18,14 +19,10 @@ func TestCreateProduct(t *testing.T) {
 	}
 	db.AutoMigrate(&entity.Product{})
 
-	product := entity.Product{
-		Name:  "Teclado Logitech",
-		Price: 500,
-		CreatedAt: time.Date(
-			2009, 11, 17, 20, 34, 58, 651387237, time.UTC)}
+	product, _ := entity.NewProduct("Teclado Logitech", 500)
 
 	productDB := NewProduct(db)
-	err = productDB.Create(&product)
+	err = productDB.Create(product)
 	if err != nil {
 		t.Error(err)
 	}
@@ -43,6 +40,42 @@ func TestCreateProduct(t *testing.T) {
 	assert.NotNil(t, product.CreatedAt, productFound.CreatedAt)
 }
 
+func TestFindAll(t *testing.T) {
+	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	if err != nil {
+		t.Error(err)
+	}
+	db.AutoMigrate(&entity.Product{})
+
+	for i := 1; i < 24; i++ {
+		product, err := entity.NewProduct(fmt.Sprintf("Product %d", i), rand.Float64()*100)
+		assert.NoError(t, err)
+		db.Create(product)
+	}
+
+	productDB := NewProduct(db)
+	products, err := productDB.FindAll(1, 10, "asc")
+
+	assert.NoError(t, err)
+	assert.Len(t, products, 10)
+	assert.Equal(t, "Product 1", products[0].Name)
+	assert.Equal(t, "Product 10", products[9].Name)
+
+	products, err = productDB.FindAll(2, 10, "asc")
+
+	assert.NoError(t, err)
+	assert.Len(t, products, 10)
+	assert.Equal(t, "Product 11", products[0].Name)
+	assert.Equal(t, "Product 20", products[9].Name)
+
+	products, err = productDB.FindAll(3, 10, "asc")
+
+	assert.NoError(t, err)
+	assert.Len(t, products, 3)
+	assert.Equal(t, "Product 21", products[0].Name)
+	assert.Equal(t, "Product 23", products[2].Name)
+}
+
 func TestFindById(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
 	if err != nil {
@@ -50,14 +83,10 @@ func TestFindById(t *testing.T) {
 	}
 	db.AutoMigrate(&entity.Product{})
 
-	product := entity.Product{
-		Name:  "Controle Xbox",
-		Price: 300,
-		CreatedAt: time.Date(
-			2009, 9, 17, 20, 34, 58, 651387237, time.UTC)}
+	product, _ := entity.NewProduct("Controle Xbox", 300)
 
 	productDB := NewProduct(db)
-	err = productDB.Create(&product)
+	err = productDB.Create(product)
 	if err != nil {
 		t.Error(err)
 	}
@@ -81,14 +110,10 @@ func TestUpdateProduct(t *testing.T) {
 	}
 	db.AutoMigrate(&entity.Product{})
 
-	product := entity.Product{
-		Name:  "Xbox",
-		Price: 4000,
-		CreatedAt: time.Date(
-			2009, 12, 17, 20, 34, 58, 651387237, time.UTC)}
+	product, _ := entity.NewProduct("Xbox", 4000)
 
 	productDB := NewProduct(db)
-	err = productDB.Create(&product)
+	err = productDB.Create(product)
 	if err != nil {
 		t.Error(err)
 	}
@@ -96,7 +121,7 @@ func TestUpdateProduct(t *testing.T) {
 	product.Name = "Playstation"
 	product.Price = 3500
 
-	err = productDB.Update(&product)
+	err = productDB.Update(product)
 	if err != nil {
 		t.Error(err)
 	}
@@ -119,14 +144,10 @@ func TestDeleteProduct(t *testing.T) {
 	}
 	db.AutoMigrate(&entity.Product{})
 
-	product := entity.Product{
-		Name:  "Nintendo Switch",
-		Price: 2000,
-		CreatedAt: time.Date(
-			2009, 13, 17, 20, 34, 58, 651387237, time.UTC)}
+	product, _ := entity.NewProduct("Nintendo Switch", 2000)
 
 	productDB := NewProduct(db)
-	err = productDB.Create(&product)
+	err = productDB.Create(product)
 	if err != nil {
 		t.Error(err)
 	}
