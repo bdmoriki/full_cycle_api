@@ -85,12 +85,9 @@ func TestFindById(t *testing.T) {
 
 	product, _ := entity.NewProduct("Controle Xbox", 300)
 
-	productDB := NewProduct(db)
-	err = productDB.Create(product)
-	if err != nil {
-		t.Error(err)
-	}
+	db.Create(product)
 
+	productDB := NewProduct(db)
 	productFound, err := productDB.FindById(product.ID.String())
 	if err != nil {
 		t.Error(err)
@@ -112,15 +109,12 @@ func TestUpdateProduct(t *testing.T) {
 
 	product, _ := entity.NewProduct("Xbox", 4000)
 
-	productDB := NewProduct(db)
-	err = productDB.Create(product)
-	if err != nil {
-		t.Error(err)
-	}
+	db.Create(product)
 
 	product.Name = "Playstation"
 	product.Price = 3500
 
+	productDB := NewProduct(db)
 	err = productDB.Update(product)
 	if err != nil {
 		t.Error(err)
@@ -146,12 +140,9 @@ func TestDeleteProduct(t *testing.T) {
 
 	product, _ := entity.NewProduct("Nintendo Switch", 2000)
 
-	productDB := NewProduct(db)
-	err = productDB.Create(product)
-	if err != nil {
-		t.Error(err)
-	}
+	db.Create(product)
 
+	productDB := NewProduct(db)
 	err = productDB.Delete(product.ID.String())
 	if err != nil {
 		t.Error(err)
