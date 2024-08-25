@@ -27,6 +27,7 @@ func TestCreateUser(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, user.Name, userFound.Name)
 	assert.Equal(t, user.Email, userFound.Email)
+	assert.NotNil(t, user.Email, userFound.Password)
 }
 
 func TestFindByEmail(t *testing.T) {
@@ -47,4 +48,5 @@ func TestFindByEmail(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, user.Name, userFound.Name)
 	assert.Equal(t, user.Email, userFound.Email)
+	assert.NotNil(t, user.Email, userFound.Password)
 }
